@@ -1,0 +1,1 @@
+Do not use this yourself. It has very few guardrails, and could potentially result in the AI Agent running arbitrary code on your machine. This is for educational purposes for myself and as a portfolio piece, nothing more.
