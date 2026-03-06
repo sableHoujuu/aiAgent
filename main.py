@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-from functions.available_functions import available_functions
+from functions.call_function import available_functions, call_function
 from prompts import system_prompt
 
 
@@ -38,8 +38,22 @@ def main():
         )
         print(output)
     if response.function_calls is not None:
+        function_call_responses = []
         for function_call in response.function_calls:
-            print(f"Calling function: {function_call.name}({function_call.args})")
+            function_call_response = call_function(function_call, args.verbose)
+            if (
+                function_call_response.parts is None
+                or function_call_response.parts == []
+            ):
+                raise Exception("Parts list is empty!")
+            parts = function_call_response.parts
+            if parts[0].function_response.response is None:
+                raise Exception("No response from function")
+            function_call_responses.append(parts[0])
+            if args.verbose is True:
+                print(
+                    f"-> {function_call_response.parts[0].function_response.response}"
+                )
 
     else:
         print(f"Response: {response.text}")

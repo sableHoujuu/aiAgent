@@ -22,7 +22,7 @@ schema_write_file = types.FunctionDeclaration(
 )
 
 
-def write_file(working_directory, file_path, content):
+def write_file(working_directory, file_path, contents):
     try:
         absolute_path = os.path.abspath(working_directory)
     except Exception as e:
@@ -43,16 +43,16 @@ def write_file(working_directory, file_path, content):
 
     try:
         os.makedirs(os.path.split(target_file)[1], exist_ok=True)
-    except Exception as e:
-        return f"Error: makedirs failed creating directories. {e}"
+    except FileExistsError:
+        pass
 
     try:
         with open(target_file, "w") as f:
-            f.write(content)
+            f.write(contents)
 
     except Exception as e:
         return (
             f"Error: could not open or write to {file_path}, see for more details: {e}"
         )
 
-    return f'Successfully wrote to "{file_path}" ({len(content)} characters written)'
+    return f'Successfully wrote to "{file_path}" ({len(contents)} characters written)'
